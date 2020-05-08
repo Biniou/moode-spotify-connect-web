@@ -21,32 +21,33 @@ $ sudo apt-get install python-dev libffi-dev libasound2-dev
 ```
 
 Moode 6.0 +
-============================================
-...
+========================
+
+On télécharge la version Chroot de spotify connect :
+
+
+```
 $ cd /home/pi curl -O curl -OL https://github.com/Fornoth/spotify-connect-web/releases/download/0.0.4-alpha/spotify-connect-web.sh 
 $ chmod u+x spotify-connect-web.sh 
-
 # Download the current chroot (~ 180 MB) 
 $ ./spotify-connect-web.sh install 
-
 # Copy your `spotify_appkey.key` into the app directory. 
 $ wget https://github.com/RafaPolit/moode-spotify-connect-web/raw/master/spotify_appkey.key 
 $ sudo cp spotify_appkey.key spotify-connect-web-chroot/usr/src/app/ 
-
 # Run using normal cmdline options for teste
 ./spotify-connect-web.sh --username 12345678 --password xyz123 --bitrate 320
-...
-
+````
 
 On créé l’exécutable
 ========================
-...
+
+```
 $ nano spotify-connect.sh
-...
+```
 
 Dans le fichier sh coller :
 
-...
+```
 #!/bin/bash
 set -e  #quitte en cas d'erreur c'est crade mais ca marche
 
@@ -57,7 +58,7 @@ sudo mount --bind /dev $DIR/dev
 sudo mount -t proc proc $DIR/proc/
 # sudo cp /etc/resolv.conf $DIR/etc/
 sudo chroot $DIR /bin/bash -c "cd /usr/src/app && python main.py --playback_device softvol -m Master --mixer_device_index 0 --name Moode$ #on execute main.py avec les parametres
-...
+```
 
 
 
@@ -135,8 +136,9 @@ This will give you some idea of which is your hardware (hw) device and which mix
 
 With that info do:
 ```
-$ cd /etc
+$ cd /home/pi/spotify-connect-web-chroot/etc
 $ sudo vim asound.conf
+$
 ```
 
 Fill the file with this code:
