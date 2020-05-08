@@ -30,10 +30,13 @@ On télécharge la version Chroot de spotify connect :
 $ cd /home/pi curl -O curl -OL https://github.com/Fornoth/spotify-connect-web/releases/download/0.0.4-alpha/spotify-connect-web.sh 
 $ chmod u+x spotify-connect-web.sh 
 # Download the current chroot (~ 180 MB) 
+
 $ ./spotify-connect-web.sh install 
 # Copy your `spotify_appkey.key` into the app directory. 
+
 $ wget https://github.com/RafaPolit/moode-spotify-connect-web/raw/master/spotify_appkey.key 
 $ sudo cp spotify_appkey.key spotify-connect-web-chroot/usr/src/app/ 
+
 # Run using normal cmdline options for teste
 ./spotify-connect-web.sh --username 12345678 --password xyz123 --bitrate 320
 ````
