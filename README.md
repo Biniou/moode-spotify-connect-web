@@ -22,39 +22,44 @@ $ sudo apt-get install python-dev libffi-dev libasound2-dev
 
 Moode 6.0 +
 ============================================
+...
+$ cd /home/pi curl -O curl -OL https://github.com/Fornoth/spotify-connect-web/releases/download/0.0.4-alpha/spotify-connect-web.sh 
+$ chmod u+x spotify-connect-web.sh 
 
-Here are the instructions to follow.  On previous versions, I had added options for standalone running, background running and service running.  Keeping all those approaches proved difficult and confussing.  I am just leaving a single set of instructions to run as a service. Hope this removes any ambiguity from the procedure.
+# Download the current chroot (~ 180 MB) 
+$ ./spotify-connect-web.sh install 
 
-*Please note*: I use **vim** for editing files, but use whatever suits you better.  Just replace the vim instructions with your editor of choice.
+# Copy your `spotify_appkey.key` into the app directory. 
+$ wget https://github.com/RafaPolit/moode-spotify-connect-web/raw/master/spotify_appkey.key 
+$ sudo cp spotify_appkey.key spotify-connect-web-chroot/usr/src/app/ 
 
-```
-$ cd /home/pi
-$ mkdir spotify && cd spotify
-$ git clone https://github.com/RafaPolit/spotify-connect-web.git
-$ cd spotify-connect-web
-$ wget https://github.com/RafaPolit/moode-spotify-connect-web/raw/master/spotify_appkey.key
-$ wget https://github.com/RafaPolit/moode-spotify-connect-web/raw/master/libspotify_embedded_shared.so
-$ sudo chmod +x libspotify_embedded_shared.so
-$ pip install -r requirements.txt
-```
+# Run using normal cmdline options for teste
+./spotify-connect-web.sh --username 12345678 --password xyz123 --bitrate 320
+...
 
-The **pip install** can take a VERY long time, let it run!
 
-```
-$ cd ..
-$ vim spotify-connect.sh
-```
+On créé l’exécutable
+========================
+...
+$ nano spotify-connect.sh
+...
 
-Inside the sh file put:
+Dans le fichier sh coller :
 
-```
-#!/bin/sh
+...
+#!/bin/bash
+set -e  #quitte en cas d'erreur c'est crade mais ca marche
 
-cd /
-cd home/pi/spotify/spotify-connect-web
-LD_LIBRARY_PATH=/home/pi/spotify/spotify-connect-web python main.py --playback_device softvol -m Master --mixer_device_index 0 --bitrate 320 --name "moOde Connect" --key /home/pi/spotify/spotify-connect-web/spotify_appkey.key
-cd /
-```
+DIR=~/spotify-connect-web-chroot #variable du dossier
+
+trap "sudo umount $DIR/dev $DIR/proc" EXIT 2 3 #A l'interception de la fin du programme on démonte les dossier exit ou CTRL+C
+sudo mount --bind /dev $DIR/dev
+sudo mount -t proc proc $DIR/proc/
+# sudo cp /etc/resolv.conf $DIR/etc/
+sudo chroot $DIR /bin/bash -c "cd /usr/src/app && python main.py --playback_device softvol -m Master --mixer_device_index 0 --name Moode$ #on execute main.py avec les parametres
+...
+
+
 
 Please note that the softvol playback device and the Master mixer is something we will create afterwards.  Also, the **--mixer_device_index** would require some experimentation, depending on your setup.  More on this later.
 
@@ -139,7 +144,7 @@ Fill the file with this code:
 pcm.softvol {
   type softvol
   slave {
-    pcm "hw:1"
+    pcm "hw:0"
   }
   control {
     name "Master"
