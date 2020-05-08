@@ -1,6 +1,7 @@
 # moode-spotify-connect-web
+Work in progresse :/!\
 
-moOde OS - spotify-web-connect install instructions and required files.
+moOde OS - spotify-web-connect install instructions and required files for raspberry pi B (ARM7 version).
 
 The fantastic moOde OS and moOde Audio Player by Tim Curtis (audiophile-quality playback for the RPi3) can be found at:
 http://moodeaudio.org/
